@@ -1,0 +1,17 @@
+*.exe
+
+*.log
+
+.DS_store
+
+.ipynb_checkpoints
+
+*.txt
+
+__init__.py
+
+__pycache__
+
+*.vscode
+
+!requirements.txt
