@@ -125,8 +125,18 @@ if user_input == contrasenia:
             """
             st.markdown(presentacion, unsafe_allow_html=True)
 
-            
-            df = pd.read_csv('../proyectofinaltokyo/data/Equipos_final.csv')
+            import os
+            import pandas as pd
+
+            # Obtiene la ruta al directorio actual del script
+            script_directory = os.path.dirname(os.path.abspath(__file__))
+
+            # Construye la ruta completa al archivo CSV
+            csv_path = os.path.join(script_directory, 'data', 'Equipos_final.csv')
+
+            # Lee el archivo CSV
+            df = pd.read_csv(csv_path)
+            #df = pd.read_csv('../proyectofinaltokyo/data/Equipos_final.csv')
             equipos_a_imagenes = {
                                     'Arenal Emeve': 'https://yt3.googleusercontent.com/ytc/APkrFKYFDxQgjP4QpTyT4l0USR9bKOXH3EjYE54gcVIn8Q=s900-c-k-c0x00ffffff-no-rj',
                                     'Cisneros Alter': 'https://pbs.twimg.com/profile_images/1715679951054049280/yiauFOvS_400x400.jpg',
