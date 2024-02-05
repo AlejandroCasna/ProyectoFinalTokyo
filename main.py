@@ -87,13 +87,17 @@ if user_input == contrasenia:
             st.sidebar.markdown(f"\n{informacion_equipo}", unsafe_allow_html=True)
 
         def ejecutar_consulta(self, query):
-            database_url = os.environ.get('DATABASE_URL')
-            
+            database_url = os.environ.get('DATABASE_URL_2')
+
             try:
                 if not database_url:
-                    raise ValueError("La variable de entorno DATABASE_URL no está configurada.")
+                    with open('../proyectofinaltokyo/pass.txt', 'r') as file:   # pass.txt en .gitignore
+                        database = file.read()
+                        engine = create_engine(f"postgresql+psycopg2://{database}")
+                else:
+                    engine = create_engine(f"postgresql+psycopg2://{database_url}")
 
-                with create_engine(f"postgresql+psycopg2://{database_url}").connect() as connection:
+                with engine.connect() as connection:
                     df = pd.read_sql(query, connection)
 
                 return df
@@ -101,6 +105,7 @@ if user_input == contrasenia:
             except Exception as e:
                 st.error(f"Error al ejecutar la consulta: {e}")
                 raise
+
 
         def pagina_inicio(self):
             
