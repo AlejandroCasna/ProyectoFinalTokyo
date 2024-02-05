@@ -7,6 +7,7 @@ import plotly.express as px
 from src.help_graficos import Graficos
 import streamlit_authenticator as stauth
 import toml
+import os
 
 
 
@@ -86,28 +87,20 @@ if user_input == contrasenia:
             st.sidebar.markdown(f"\n{informacion_equipo}", unsafe_allow_html=True)
 
         def ejecutar_consulta(self, query):
-            with open('../proyectofinaltokyo/pass.txt', 'r') as file:   # pass.txt en .gitignore
-        
-                database = file.read()
-            connection = None
+            database_url = os.environ.get('DATABASE_URL')
+            
             try:
-                
-                engine = create_engine(f"postgresql+psycopg2://{database}")
-                connection = engine.connect()
+                if not database_url:
+                    raise ValueError("La variable de entorno DATABASE_URL no está configurada.")
 
-                
-                df = pd.read_sql(query, connection)
-                
+                with create_engine(f"postgresql+psycopg2://{database_url}").connect() as connection:
+                    df = pd.read_sql(query, connection)
+
                 return df
 
             except Exception as e:
                 st.error(f"Error al ejecutar la consulta: {e}")
-                raise  
-
-            finally:
-                
-                if connection is not None and not connection.closed:
-                    connection.close()
+                raise
 
         def pagina_inicio(self):
             
@@ -125,18 +118,11 @@ if user_input == contrasenia:
             """
             st.markdown(presentacion, unsafe_allow_html=True)
 
-            import os
-            import pandas as pd
-
-            # Obtiene la ruta al directorio actual del script
+            
             script_directory = os.path.dirname(os.path.abspath(__file__))
-
-            # Construye la ruta completa al archivo CSV
             csv_path = os.path.join(script_directory, 'data', 'Equipos_final.csv')
-
-            # Lee el archivo CSV
             df = pd.read_csv(csv_path)
-            #df = pd.read_csv('../proyectofinaltokyo/data/Equipos_final.csv')
+
             equipos_a_imagenes = {
                                     'Arenal Emeve': 'https://yt3.googleusercontent.com/ytc/APkrFKYFDxQgjP4QpTyT4l0USR9bKOXH3EjYE54gcVIn8Q=s900-c-k-c0x00ffffff-no-rj',
                                     'Cisneros Alter': 'https://pbs.twimg.com/profile_images/1715679951054049280/yiauFOvS_400x400.jpg',
