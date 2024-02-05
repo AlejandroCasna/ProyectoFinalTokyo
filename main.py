@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
 from sqlalchemy import create_engine
+from sqlalchemy.dialects.postgresql import psycopg2
 import plotly.express as px
 from src.help_graficos import Graficos
 import streamlit_authenticator as stauth
@@ -78,20 +79,20 @@ if user_input == contrasenia:
                 f'<img src="{image_url}" alt="Imagen de {team_name}" style="border-radius:20%; width:50%;">',
                 unsafe_allow_html=True
             )
-            df_equipo = pd.read_csv('../VoleyStats-Pro-run/data/Equipos_final.csv')
+            df_equipo = pd.read_csv('../proyectofinaltokyo/data/Equipos_final.csv')
             # Mostrar información específica de la columna 'informacion' con saltos de línea
             informacion_equipo = df_equipo[df_equipo['Equipo'] == team_name]['informacion'].iloc[0]
 
             st.sidebar.markdown(f"\n{informacion_equipo}", unsafe_allow_html=True)
 
         def ejecutar_consulta(self, query):
-            with open('../VoleyStats-pro-run/pass.txt', 'r') as file:   # pass.txt en .gitignore
+            with open('../proyectofinaltokyo/pass.txt', 'r') as file:   # pass.txt en .gitignore
         
-                pass_ = file.read()
+                database = file.read()
             connection = None
             try:
                 
-                engine = create_engine(f'postgresql://tradeone:{pass_}@localhost:5432/VoleyballDB')
+                engine = create_engine(f"postgresql+psycopg2://{database}")
                 connection = engine.connect()
 
                 
@@ -125,7 +126,7 @@ if user_input == contrasenia:
             st.markdown(presentacion, unsafe_allow_html=True)
 
             
-            df = pd.read_csv('../VoleyStats-Pro-run/data/Equipos_final.csv')
+            df = pd.read_csv('../proyectofinaltokyo/data/Equipos_final.csv')
             equipos_a_imagenes = {
                                     'Arenal Emeve': 'https://yt3.googleusercontent.com/ytc/APkrFKYFDxQgjP4QpTyT4l0USR9bKOXH3EjYE54gcVIn8Q=s900-c-k-c0x00ffffff-no-rj',
                                     'Cisneros Alter': 'https://pbs.twimg.com/profile_images/1715679951054049280/yiauFOvS_400x400.jpg',
